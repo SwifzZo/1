@@ -2041,6 +2041,114 @@ spawn(function()
 end)
 
 
+
+
+
+
+spawn(function()
+	while wait(.1) do
+		if _G.FastAttack3 then
+			pcall(function()
+				repeat task.wait()
+					Attack()
+					Boost()
+					wait()
+					Attack()
+				until not _G.FastAttack 
+			end)
+		end
+	end
+end)
+
+
+function GetBladeHit()
+	local CombatFrameworkLib = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework))
+	local CmrFwLib = CombatFrameworkLib[2]
+	local p13 = CmrFwLib.activeController
+	local weapon = p13.blades[1]
+	if not weapon then 
+		return weapon
+	end
+	while weapon.Parent ~= game.Players.LocalPlayer.Character do
+		weapon = weapon.Parent 
+	end
+	return weapon
+end
+
+local SeraphFrame = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework")))[2]
+local VirtualUser = game:GetService('VirtualUser')
+local RigControllerR = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework.RigController))[2]
+local Client = game:GetService("Players").LocalPlayer
+local DMG = require(Client.PlayerScripts.CombatFramework.Particle.Damage)
+
+function SeraphFuckWeapon() 
+	local p13 = SeraphFrame.activeController
+	local wea = p13.blades[1]
+	if not wea then return end
+	while wea.Parent~=game.Players.LocalPlayer.Character do wea=wea.Parent end
+	return wea
+end
+
+
+
+function getHits(Size)
+	local Hits = {}
+	local Enemies = workspace.Enemies:GetChildren()
+	local Characters = workspace.Characters:GetChildren()
+	for i=1,#Enemies do local v = Enemies[i]
+		local Human = v:FindFirstChildOfClass("Humanoid")
+		if Human and Human.RootPart and Human.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Human.RootPart.Position) < Size+55 then
+			table.insert(Hits,Human.RootPart)
+		end
+	end
+	for i=1,#Characters do local v = Characters[i]
+		if v ~= game.Players.LocalPlayer.Character then
+			local Human = v:FindFirstChildOfClass("Humanoid")
+			if Human and Human.RootPart and Human.Health > 0 and game.Players.LocalPlayer:DistanceFromCharacter(Human.RootPart.Position) < Size+55 then
+				table.insert(Hits,Human.RootPart)
+			end
+		end
+	end
+	return Hits
+end
+
+task.spawn(
+	function()
+	while wait() do
+		if  _G.FastAttack3 then
+			if SeraphFrame.activeController then
+				if v.Humanoid.Health > 0 then
+					Attack()
+					Boost()
+					SeraphFrame.activeController.attacking = false
+					SeraphFrame.activeController.timeToNextBlock = 0
+					SeraphFrame.activeController.humanoid.AutoRotate = true
+					SeraphFrame.activeController.increment = 5
+					SeraphFrame.activeController.blocking = false
+					SeraphFrame.activeController.hitboxMagnitude = 90
+					SeraphFrame.activeController.timeToNextAttack = 0.1
+					SeraphFrame.activeController.focusStart = 0.1
+					SeraphFrame.activeController.humanoid.AutoRotate = true
+					SeraphFrame.activeController.increment = 1 + 1 / 0.5
+				end
+			end
+		end
+	end
+end)
+
+
+
+
+
+function Boost()
+	spawn(function()
+		game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("weaponChange",tostring(SeraphFuckWeapon()))
+	end)
+end
+
+
+
+
 function AttackFunctionNaJa()
 	local ac = CombatFrameworkR.activeController
 	if ac and ac.equipped then
@@ -2064,7 +2172,7 @@ function AttackFunctionNaJa()
 				debug.setupvalue(ac.attack, 4, AcAttack7)
 				debug.setupvalue(ac.attack, 7, AcAttack10)
 				for k, v in pairs(ac.animator.anims.basic) do
-					v:Play(0.001, 0.002, 0.003) -- ลดเวลาการเล่นอนิเมชัน
+					v:Play(0.005, 0.005, 0.005) -- ลดเวลาการเล่นอนิเมชัน
 				end
 				if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") and ac.blades and ac.blades[1] then 
 					game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("weaponChange",tostring(CurrentWeapon()))

@@ -2076,6 +2076,35 @@ function AttackFunctionNaJa()
 	end
 end
 
+local SeraphFrame = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework")))[2]
+local VirtualUser = game:GetService('VirtualUser')
+local RigControllerR = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework.RigController))[2]
+local Client = game:GetService("Players").LocalPlayer
+local DMG = require(Client.PlayerScripts.CombatFramework.Particle.Damage)
+local cdnormal = 1
+local Animation = Instance.new("Animation")
+local CooldownFastAttack = 1
+
+
+
+Attack = function()
+	local ac = SeraphFrame.activeController
+	if _G.FastAttack3 and ac and ac.equipped then
+		task.spawn(
+			function()
+			if tick() - cdnormal > 0.1 then
+				ac:Attack()
+				cdnormal = tick()
+			else
+				 Animation.AnimationId = ac.anims.basic[2]
+				ac.humanoid:LoadAnimation(Animation):Play(2, 2) --ท่าไม่ทำงานแก้เป็น (1,1)
+				game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("hit", getHits(150), 3, "")
+			end
+		end)
+	end
+end
+
+
 task.spawn(function() 
 	while task.wait() do
 		if _G.FastAttack3 then 
@@ -2084,12 +2113,9 @@ task.spawn(function()
 					if v.Humanoid.Health > 0 then
 						if (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 95 then
 							repeat wait()
-								Attack()
-								Boost()
 								AttackFunction()
 								AttackFunctionNaJa()
 								AttackPlayersFunctionNaJa()
-								game:GetService("RunService").RenderStepped:Connect(function()
 								SeraphFrame.activeController.attacking = false
 								SeraphFrame.activeController.timeToNextAttack = 0.1 ---เวลาที่จะตีถัดไป
 								SeraphFrame.activeController.timeToNextBlock = 0
@@ -2098,9 +2124,6 @@ task.spawn(function()
 								SeraphFrame.activeController.hitboxMagnitude = 95
 								SeraphFrame.activeController.humanoid.AutoRotate = true
 								SeraphFrame.activeController.increment = 4
-								SeraphFrame.game.Players.LocalPlayer.Character.Stun.Value = 0
-								SeraphFrame.game.Players.LocalPlayer.Character.Humanoid.Sit = false
-								SeraphFrame.game.Players.LocalPlayer.Character.Busy.Value = false
 							until not _G.FastAttack3 or v.Humanoid.Health <= 0
 						end
 					end
@@ -2109,10 +2132,6 @@ task.spawn(function()
 		end
 	end
 end)
-
-
-
-
 
 
 -- KzSystem(getgenv().PCMode)| คุณใช้ PC ใช้มั้ย ใช้เปลี่ยนเป็น true แต่ถ้าคุณใช้มือถือเปลี่ยนเป็น false

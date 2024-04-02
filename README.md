@@ -2089,6 +2089,7 @@ task.spawn(function()
 								AttackFunction()
 								AttackFunctionNaJa()
 								AttackPlayersFunctionNaJa()
+								game:GetService("RunService").RenderStepped:Connect(function()
 								SeraphFrame.activeController.attacking = false
 								SeraphFrame.activeController.timeToNextAttack = 0.1 ---เวลาที่จะตีถัดไป
 								SeraphFrame.activeController.timeToNextBlock = 0
@@ -2097,6 +2098,9 @@ task.spawn(function()
 								SeraphFrame.activeController.hitboxMagnitude = 95
 								SeraphFrame.activeController.humanoid.AutoRotate = true
 								SeraphFrame.activeController.increment = 4
+								SeraphFrame.game.Players.LocalPlayer.Character.Stun.Value = 0
+								SeraphFrame.game.Players.LocalPlayer.Character.Humanoid.Sit = false
+								SeraphFrame.game.Players.LocalPlayer.Character.Busy.Value = false
 							until not _G.FastAttack3 or v.Humanoid.Health <= 0
 						end
 					end
@@ -2108,17 +2112,7 @@ end)
 
 
 
-spawn(function()
-    game:GetService("RunService").RenderStepped:Connect(function()
-        if _G.FastAttack3  then
-			pcall(function()
-            game.Players.LocalPlayer.Character.Stun.Value = 0
-            game.Players.LocalPlayer.Character.Humanoid.Sit = false
-            game.Players.LocalPlayer.Character.Busy.Value = false
-			end)
-		end
-	end)
-end)
+
 
 
 -- KzSystem(getgenv().PCMode)| คุณใช้ PC ใช้มั้ย ใช้เปลี่ยนเป็น true แต่ถ้าคุณใช้มือถือเปลี่ยนเป็น false

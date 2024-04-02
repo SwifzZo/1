@@ -2097,7 +2097,7 @@ Attack = function()
 				cdnormal = tick()
 			else
 				 Animation.AnimationId = ac.anims.basic[2]
-				ac.humanoid:LoadAnimation(Animation):Play(2, 2) --ท่าไม่ทำงานแก้เป็น (1,1)
+				ac.humanoid:LoadAnimation(Animation):Play(2, 2) 
 				game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("hit", getHits(150), 3, "")
 			end
 		end)
@@ -2113,6 +2113,8 @@ task.spawn(function()
 					if v.Humanoid.Health > 0 then
 						if (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 95 then
 							repeat wait()
+								Attack()
+								Boost()
 								AttackFunction()
 								AttackFunctionNaJa()
 								AttackPlayersFunctionNaJa()
@@ -2133,6 +2135,17 @@ task.spawn(function()
 	end
 end)
 
+
+spawn(function()
+    game:GetService("RunService").RenderStepped:Connect(function()
+        if _G.FastAttack3 then
+            pcall(function()
+                game:GetService 'VirtualUser':CaptureController()
+                game:GetService 'VirtualUser':Button1Down(Vector2.new(0,1,0,1))
+            end)
+        end
+    end)
+end)
 
 -- KzSystem(getgenv().PCMode)| คุณใช้ PC ใช้มั้ย ใช้เปลี่ยนเป็น true แต่ถ้าคุณใช้มือถือเปลี่ยนเป็น false
 -- KzSystem(getgenv().UIHit)| ปิดการแสดงของ UI false ต้องการดูเปลี่ยนเป็น true

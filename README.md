@@ -2076,33 +2076,9 @@ function AttackFunctionNaJa()
 	end
 end
 
-local SeraphFrame = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts:WaitForChild("CombatFramework")))[2]
-local VirtualUser = game:GetService('VirtualUser')
-local RigControllerR = debug.getupvalues(require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework.RigController))[2]
-local Client = game:GetService("Players").LocalPlayer
-local DMG = require(Client.PlayerScripts.CombatFramework.Particle.Damage)
-local cdnormal = 1
-local Animation = Instance.new("Animation")
-local CooldownFastAttack = 1
 
 
 
-Attack = function()
-	local ac = SeraphFrame.activeController
-	if _G.FastAttack3 and ac and ac.equipped then
-		task.spawn(
-			function()
-			if tick() - cdnormal > 0.1 then
-				ac:Attack()
-				cdnormal = tick()
-			else
-				 Animation.AnimationId = ac.anims.basic[2]
-				ac.humanoid:LoadAnimation(Animation):Play(2, 2) 
-				game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("hit", getHits(150), 3, "")
-			end
-		end)
-	end
-end
 
 
 task.spawn(function() 
